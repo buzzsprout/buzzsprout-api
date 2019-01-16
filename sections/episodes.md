@@ -4,7 +4,7 @@ Episodes
 Get episodes
 ------------
 
-* `GET /episodes.json` will return all the clients that have opened projects.
+* `GET /episodes.json` will return all the episodes for a podcast.
 
 ```json
 [
