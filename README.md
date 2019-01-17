@@ -34,7 +34,7 @@ You'll receive a `415 Unsupported Media Type` response code if you attempt to us
 
 Sample GET
 -------
-To make a request for all the projects on your subscription, you'd append the projects index path to the base url to form something like https://www.buzzsprout.com/9999/api/episodes.json. In cURL, that looks like:
+To make a request for all the Episodes on your account, you'd append the episodes index path to the base url to form something like https://www.buzzsprout.com/9999/api/episodes.json. In cURL, that looks like:
 
 ```shell
 curl -H "Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw" \
@@ -66,7 +66,7 @@ If Buzzsprout is having trouble, you might see a 5xx error. `500` means that the
 Thanks!
 ----------------------
 
-Thank you for checking out Buzzsprout's API and please don't hesitate to reach out and let us know how you are using the API to help people track their time and hit their budgets.  Feel free to use GitHub issues to post any issues or feature requests.
+Thank you for checking out Buzzsprout's API and please don't hesitate to reach out and let us know how you are using the API.  Feel free to use GitHub issues to post any issues or feature requests.
 
 Please tell us how we can make the API better. If you have a specific feature request or if you found a bug, please use GitHub issues. Fork these docs and send a pull request with improvements.
 
