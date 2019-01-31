@@ -5,7 +5,7 @@ This is version one of the Buzzsprout API.  This API has been designed around RE
 
 URL
 ---
-All URLs start with `https://www.buzzsprout.com/api/9999`. **SSL only**. The path is prefixed with /api and the podcast id. If we change the API in backward-incompatible ways, we'll add the version marker and maintain stable support for the old URLs.
+All requests are SSL only and the API URL is `https://www.buzzsprout.com/api/9999` where `9999` is the podcast identifier. If we change the API in backward-incompatible ways, we'll add the version marker and maintain stable support for old URLs.
 
 
 Authentication
@@ -34,11 +34,11 @@ You'll receive a `415 Unsupported Media Type` response code if you attempt to us
 
 Sample GET
 -------
-To make a request for all the Episodes on your account, you'd append the episodes index path to the base url to form something like https://www.buzzsprout.com/9999/api/episodes.json. In cURL, that looks like:
+To make a request for all the Episodes on your account, you'd append the episodes index path to the base url to form something like https://www.buzzsprout.com/api/9999/episodes.json. In cURL, that looks like:
 
 ```shell
 curl -H "Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw" \
-  https://www.buzzsprout.com/9999/api/episodes.json
+  https://www.buzzsprout.com/api/9999/episodes.json
 ```
 Sample POST
 ------------
@@ -48,7 +48,7 @@ To create something, it's the same deal except you also have to include the `Con
 curl -H "Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw" \
      -H 'Content-Type: application/json' \
      -d '{ "title": "My new episode!" }' \
-  https://www.buzzsprout.com/9999/api/episodes.json
+  https://www.buzzsprout.com/api/9999/episodes.json
 ```
 
 Use HTTP caching
