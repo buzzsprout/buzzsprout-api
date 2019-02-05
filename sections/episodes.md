@@ -69,11 +69,16 @@ Create episode
   "episode_number":4,
   "season_number":5,
   "explicit":true,
-  "private":true
+  "private":true,
+  "audio_url": "https://www.google.com/my_audio_file.mp4",
+  "artwork_url": "https://www.google.com/my_artwork_file.jpeg"
 }
 ```
 
 This will return `201 Created`,  with the current JSON representation of the episode if the creation was a success.
+
+**To send an audio file or artwork file**:  Instead of sending the *audio_url* param you can send the actual file as an attachment with the *audio_file* param. Likewise, instead of sending the *artwork_url* param you can send the actual file as an attachment with the *artwork_file* param
+
 
 Update episode
 -------------
