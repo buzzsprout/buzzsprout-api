@@ -70,6 +70,7 @@ Create episode
   "season_number":5,
   "explicit":true,
   "private":true,
+  "email_user_after_audio_processed": true,
   "audio_url": "https://www.google.com/my_audio_file.mp4",
   "artwork_url": "https://www.google.com/my_artwork_file.jpeg"
 }
@@ -78,6 +79,8 @@ Create episode
 This will return `201 Created`,  with the current JSON representation of the episode if the creation was a success.
 
 **To send an audio file or artwork file**:  Instead of sending the *audio_url* param you can send the actual file as an attachment with the *audio_file* param. Likewise, instead of sending the *artwork_url* param you can send the actual file as an attachment with the *artwork_file* param
+
+**Email user after audio processed**: Sends the user an email once your file has finished processing or if an error occurred during processing. It defaults to true and can be set to false to not send any emails.
 
 
 Update episode
