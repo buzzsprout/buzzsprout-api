@@ -1,6 +1,6 @@
 Episodes
 ========
-Run the following examples in Postman [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/cb76cd4a27641f4e1a04)
+Run the following examples in Postman [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/6eae6ad6bc679e8ad112)
 
 Get episodes
 ------------
