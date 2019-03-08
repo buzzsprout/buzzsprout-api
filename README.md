@@ -20,7 +20,7 @@ Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw
 
 Additionaly you can pass the api token as a paramater in the URL
 ```
-?token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw
+?api_token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw
 ```
 
 To retrieve your token check out the my account section in your Buzzsprout admin at [buzzsprout.com](https://www.buzzsprout.com "www.buzzsprout.com").
