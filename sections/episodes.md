@@ -27,7 +27,8 @@ Get episodes
     "episode_number":5,
     "season_number":5,
     "explicit":false,
-    "private":false
+    "private":false,
+    "total_plays":150
   },
   {
     "id":788880,
@@ -46,7 +47,8 @@ Get episodes
     "episode_number":4,
     "season_number":5,
     "explicit":true,
-    "private":true
+    "private":false,
+    "total_plays":150
   }
 ]
 ```
