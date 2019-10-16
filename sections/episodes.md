@@ -65,7 +65,6 @@ Create episode
   "tags":"",
   "published_at":"2019-09-12T03:00:00.000-04:00",
   "duration":23462,
-  "hq":false,
   "guid":"Buzzsprout788880",
   "inactive_at":null,
   "episode_number":4,
