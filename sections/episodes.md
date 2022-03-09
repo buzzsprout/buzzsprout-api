@@ -71,13 +71,15 @@ Create episode
   "inactive_at":null,
   "episode_number":4,
   "season_number":5,
-  "explicit":true,
-  "private":true,
+  "explicit":"true",
+  "private":"true",
   "email_user_after_audio_processed": true,
   "audio_url": "https://www.google.com/my_audio_file.mp4",
   "artwork_url": "https://www.google.com/my_artwork_file.jpeg"
 }
 ```
+
+**NOTE**: Although `explicit` and `private` come back from GET as booleans, they must be string representations of booleans for POST. This quirk may also apply to other booleans with the POST.
 
 This will return `201 Created`,  with the current JSON representation of the episode if the creation was a success.
 
