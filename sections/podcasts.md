@@ -34,7 +34,7 @@ Get podcasts
    "id": 20,
    "title": "Youth Podcast",
    "author": "Pastor Tim Tom","
-   description": "Our super cool youth podcast",
+   "description": "Our super cool youth podcast",
    "website_address": null,
    "contact_email": "team+tim@buzzsprout.com",
    "keywords": null,
