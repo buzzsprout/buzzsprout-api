@@ -54,6 +54,37 @@ Get episodes
   }
 ]
 ```
+
+Get episode
+------------
+
+* `GET /episodes/788881.json` will return the specifed episode.
+
+```json
+
+{
+  "id":788881,
+  "title":"Too small or too big?",
+  "audio_url":"https://www.buzzsprout.com/140447/788881-filename.mp3",
+  "artwork_url":"https://storage.buzzsprout.com/variants/NABbMDx7JN5bSLzLPXyj67jA/8d66eb17bb7d02ca4856ab443a78f2148cafbb129f58a3c81282007c6fe24ff2",
+  "description":"",
+  "summary":"",
+  "artist":"Muffin Man",
+  "tags":"",
+  "published_at":"2019-09-12T03:00:00.000-04:00",
+  "duration":12362,
+  "hq":true,
+  "guid":"Buzzsprout788881",
+  "inactive_at":null,
+  "episode_number":5,
+  "season_number":5,
+  "explicit":false,
+  "private":false,
+  "total_plays":150
+}
+```
+
+
 Create episode
 -------------
 * `POST /episodes.json` will create a new episode with the included parameters.
@@ -88,7 +119,7 @@ This will return `201 Created`,  with the current JSON representation of the epi
 
 Update episode
 -------------
-* `PUT /episodes/12.json` will update an existing episode with the included parameters.
+* `PUT /episodes/1.json` will update an existing episode with the included parameters.
 
 ```json
 {
