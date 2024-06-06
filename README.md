@@ -25,6 +25,9 @@ Additionaly you can pass the api token as a paramater in the URL
 
 To retrieve your token check out the my account section in your Buzzsprout admin at [buzzsprout.com](https://www.buzzsprout.com "www.buzzsprout.com").
 
+User Agent
+----------
+Ensure you set the user agent header. Failing to do so may result in a blocked request since many bots and spammers use the default user agent set by the libraries used with making requests.
 
 Body Format
 ----------
