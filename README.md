@@ -1,76 +1,159 @@
 Buzzsprout API
-====================
+==============
 
-This is version one of the Buzzsprout API.  This API has been designed around RESTful concepts with JSON for serialization.
+The Buzzsprout API is a REST API for managing podcasts and episodes. Requests and responses use JSON unless otherwise documented.
 
-URL
----
-All requests are SSL only and the API URL is `https://www.buzzsprout.com/api/9999` where `9999` is the podcast identifier. If we change the API in backward-incompatible ways, we'll add the version marker and maintain stable support for old URLs.
+Base URL
+--------
 
+All requests use HTTPS. Podcast-scoped endpoints start with:
+
+```text
+https://www.buzzsprout.com/api/:podcast_id
+```
+
+Use the numeric podcast ID shown in Buzzsprout. Extensionless paths are canonical; an optional `.json` suffix is also accepted.
 
 Authentication
 --------------
 
-Buzzsprout uses a simple token-based HTTP Authentication scheme. For clients to authenticate, the method "Token" and the token key should be included in the Authorization HTTP header. The key should be prefixed by the string literal "token=" with no whitespace. For example:
+Send the API token in the `Authorization` header:
 
-```shell
-Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw
+```text
+Authorization: Token token=YOUR_API_TOKEN
 ```
 
+Find the token under **Profile → API** in Buzzsprout.
 
-Additionaly you can pass the api token as a paramater in the URL
-```
-?api_token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw
-```
+Use an identifiable `User-Agent` on every request. Generic library defaults may be blocked.
 
-To retrieve your token check out the my account section in your Buzzsprout admin at [buzzsprout.com](https://www.buzzsprout.com "www.buzzsprout.com").
+For automated clients
+---------------------
 
-User Agent
-----------
-Ensure you set the user agent header. Failing to do so may result in a blocked request since many bots and spammers use the default user agent set by the libraries used with making requests.
+- Send an identifiable `User-Agent` (not a generic library default).
+- Always **complete** an upload after putting the file bytes; otherwise the episode has no media.
 
-Body Format
-----------
-All data is serialized with JSON and UTF-8 encoded.  This means that you have to send `Content-Type: application/json; charset=utf-8` when you're POSTing or PUTing data into Buzzsprout. All API URLs end in .json to indicate that they accept and return JSON.
+Publish an episode
+------------------
 
-You'll receive a `415 Unsupported Media Type` response code if you attempt to use a different URL suffix or leave out the `Content-Type` header.
+A typical publish flow:
 
-Sample GET
--------
-To make a request for all the Episodes on your account, you'd append the episodes index path to the base url to form something like https://www.buzzsprout.com/api/9999/episodes.json. In cURL, that looks like:
+1. `GET /api/podcasts` — note the numeric podcast `id`.
+2. `POST /api/:podcast_id/episodes` with at least a `title` and `"private": true` (private is the default when `published_at` is omitted).
+3. Upload audio or video:
+   - [Start the upload](sections/uploads.md)
+   - `PUT` the file bytes to the returned URL(s)
+   - **Complete** the upload (required before the episode has media)
+4. `GET /api/:podcast_id/episodes/:id` when encoding finishes (`duration` is positive integer).
+5. Optional: add [chapters](sections/chapters.md), [contributors](sections/contributors.md), artwork
+6. `PATCH /api/:podcast_id/episodes/:id` with `"private": false` (and `published_at` to a future date if scheduling).
 
-```shell
-curl -H "Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw" \
-  https://www.buzzsprout.com/api/9999/episodes.json
-```
-Sample POST
+See [Episodes](sections/episodes.md) and [Upload audio or video](sections/uploads.md) for field details and examples.
+
+Resources
+---------
+
+- [Podcasts](sections/podcasts.md) — list, show, and update a podcast
+- [Episodes](sections/episodes.md) — create, inspect, update, schedule, and unpublish episodes
+- [Upload audio or video](sections/uploads.md) — attach media to an episode
+- [Stats](sections/stats.md) — download totals and details for a single date
+- [Team](sections/team.md) — manage people with Buzzsprout login access
+- [Contributors](sections/contributors.md) — manage on-show credits and assign them to episodes
+- [Brand affiliations](sections/brand_affiliations.md) — manage sponsor or affiliate links and assign them to episodes
+- [Chapters](sections/chapters.md) — replace an episode's chapter list
+- [Transcripts](sections/transcripts.md) — manage public transcripts and update high-fidelity transcripts
+- [Listings](sections/listings.md) — inspect directory status and submit eligible directories
+- [Podrolls](sections/podrolls.md) — manage recommended podcasts in the RSS feed
+- [Feed verifications](sections/feed_verifications.md) — manage `<podcast:txt>` values in the RSS feed
+- [Fan mail](sections/fan_mail.md) — list, publish, read, and block listener messages
+- [Insertion points](sections/insertion_points.md) — manage mid-roll timestamps
+- [Soundbites](sections/soundbites.md) — create short video clips from episode audio
+
+Team members can log into Buzzsprout. Contributors are public names and roles that appear on the show; they are separate resources.
+
+Curl example
 ------------
-To create something, it's the same deal except you also have to include the `Content-Type` header and the JSON data:
 
-```shell
-curl -H "Authorization: Token token=ApV99yzvwApV99yzvwApV99yzvwApV99yzvw" \
-     -H 'Content-Type: application/json' \
-     -d '{ "title": "My new episode!" }' \
-  https://www.buzzsprout.com/api/9999/episodes.json
+```bash
+curl -sS "https://www.buzzsprout.com/api/podcasts" \
+  -H "Authorization: Token token=YOUR_API_TOKEN" \
+  -H "User-Agent: ExamplePodcastClient/1.0" \
+  -H "Accept: application/json"
 ```
 
-Use HTTP caching
-----------------
+Ruby example
+------------
 
-You must make use of the HTTP freshness headers to lessen the load on our servers (and increase the speed of your application!). Most requests we return will include an `ETag` or `Last-Modified` header. When you first request a resource, store this value, and then submit them back to us on subsequent requests as `If-None-Match` and `If-Modified-Since`. If the resource hasn't changed, you'll see a `304 Not Modified` response, which saves you the time and bandwidth of sending something you already have.
+This example uses only Ruby's standard library. Keep the token in an environment variable rather than in source code.
 
+```ruby
+require "json"
+require "net/http"
 
-Handling errors
----------------
+API_TOKEN = ENV.fetch("BUZZSPROUT_API_TOKEN")
+PODCAST_ID = ENV.fetch("BUZZSPROUT_PODCAST_ID")
 
-If Buzzsprout is having trouble, you might see a 5xx error. `500` means that the app is entirely down, but you might also see `502 Bad Gateway`, `503 Service Unavailable`, or `504 Gateway Timeout`. It's your responsibility in all of these cases to retry your request later.
+def buzzsprout_request(request_class, path, body: nil)
+  uri = URI("https://www.buzzsprout.com#{path}")
+  request = request_class.new(uri)
+  request["Accept"] = "application/json"
+  request["Authorization"] = "Token token=#{API_TOKEN}"
+  request["User-Agent"] = "ExamplePodcastClient/1.0"
 
+  if body
+    request["Content-Type"] = "application/json"
+    request.body = JSON.generate(body)
+  end
 
-Thanks!
-----------------------
+  response = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+    http.request(request)
+  end
+  raise "Buzzsprout API error #{response.code}: #{response.body}" unless response.is_a?(Net::HTTPSuccess)
 
-Thank you for checking out Buzzsprout's API and please don't hesitate to reach out and let us know how you are using the API.  Feel free to use GitHub issues to post any issues or feature requests.
+  response.body.empty? ? nil : JSON.parse(response.body)
+end
 
-Please tell us how we can make the API better. If you have a specific feature request or if you found a bug, please use GitHub issues. Fork these docs and send a pull request with improvements.
+podcasts = buzzsprout_request(Net::HTTP::Get, "/api/podcasts")
 
-To talk with us and other developers about the API, [post a question on StackOverflow](http://stackoverflow.com/questions/ask) tagged `Buzzsprout` or [check out our support section](http://www.buzzsprout.com/help).
+episode = buzzsprout_request(
+  Net::HTTP::Post,
+  "/api/#{PODCAST_ID}/episodes",
+  body: { title: "My new episode", private: true }
+)
+```
+
+Request and response format
+---------------------------
+
+For JSON request bodies, send `Content-Type: application/json; charset=utf-8`. File and transcript endpoints describe their multipart or raw-upload requirements separately.
+
+Successful creates return `201 Created`; asynchronous operations may return `202 Accepted`; deletes generally return `204 No Content`.
+
+Most newer endpoints return errors in this shape:
+
+```json
+{
+  "error": {
+    "code": "invalid",
+    "message": "Title can't be blank",
+    "param": "title"
+  }
+}
+```
+
+The original episode create and update endpoints retain their legacy error format: validation errors are field hashes, while invalid credentials and inaccessible podcasts are plain-text bodies.
+
+Rate limits and retries
+-----------------------
+
+Requests are limited to 60 per minute per authorization value. A request over the limit returns `429 Too Many Requests`. Retry `429` and transient `5xx` responses with exponential backoff; do not retry validation or permission errors unchanged.
+
+HTTP caching
+------------
+
+When a response includes `ETag` or `Last-Modified`, store it and send it back as `If-None-Match` or `If-Modified-Since`. An unchanged resource returns `304 Not Modified` without a response body.
+
+Support
+-------
+
+Use [GitHub issues](https://github.com/Buzzsprout/buzzsprout-api/issues) for API questions, bugs, and feature requests.
