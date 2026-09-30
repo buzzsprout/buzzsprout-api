@@ -28,6 +28,8 @@ Both return the episode representation. The list endpoint returns an array.
   "title": "Too small or too big?",
   "audio_url": "https://www.buzzsprout.com/140447/788881-filename.mp3",
   "artwork_url": "https://example.com/artwork.jpg",
+  "media_type": "audio",
+  "video_thumbnail_url": null,
   "description": "",
   "artist": "Muffin Man",
   "tags": "",
@@ -79,6 +81,8 @@ Field notes
 - `episode_type` — `full`, `trailer`, or `bonus`.
 - `inactive_at` — set when an episode is removed from the active library. It is not the same as unpublishing; use `"private": true` to unpublish.
 - `explicit` — on update, an omitted or blank value is treated as `false`.
+- `media_type` — `"audio"` or `"video"`.
+- `video_thumbnail_url` — for video episodes, a direct `https://storage.buzzsprout.com/...` URL for the 16:9 poster when available; otherwise `null`. Distinct from `artwork_url`, which is the square cover art.
 
 Update or unpublish
 -------------------
@@ -104,6 +108,8 @@ Media and artwork
 -----------------
 
 Prefer [Upload audio or video](uploads.md) to attach or replace media. Create the episode first, then start → PUT → complete; without **complete**, the episode has no media.
+
+List and show expose `media_type` and, for video episodes, optional `video_thumbnail_url` (16:9 poster). Square `artwork_url` is unchanged. Episode JSON does not currently include a playable video stream URL.
 
 ### Deprecated audio fields
 
