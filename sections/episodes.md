@@ -42,7 +42,7 @@ Both return the episode representation. The list endpoint returns an array.
   "episode_type": "full",
   "explicit": false,
   "private": false,
-  "total_plays": 150
+  "total_downloads": 150
 }
 ```
 
