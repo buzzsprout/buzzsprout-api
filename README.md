@@ -153,6 +153,11 @@ HTTP caching
 
 When a response includes `ETag` or `Last-Modified`, store it and send it back as `If-None-Match` or `If-Modified-Since`. An unchanged resource returns `304 Not Modified` without a response body.
 
+MCP for supported AI assistants
+-------------------------------
+
+Buzzsprout also provides a read-only MCP server for supported AI-assistant integrations. It requires a registered OAuth client and is not a replacement for the public REST API. See [MCP server](sections/mcp.md).
+
 Support
 -------
 
