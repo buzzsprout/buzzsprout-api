@@ -99,7 +99,7 @@ Upload your own transcript file when you want to replace the public transcript. 
 * `POST /api/:podcast_id/episodes/:episode_id/transcript`
 * Multipart form fields:
   * `transcript_file` — the transcript file
-  * `transcript_format` — accepted formats: `srt` or `json`
+  * `transcript_format` — accepted formats: [`srt`](#srt-file-format) or `json`
 * Returns `201 Created` and the JSON object above.
 * Missing `transcript_file` or `transcript_format` returns `400 Bad Request`.
 * A file that cannot be parsed for the given format returns `422` with `code: "invalid"` and `param: "transcript_file"`.
@@ -112,6 +112,37 @@ curl -sS -X POST "https://www.buzzsprout.com/api/PODCAST_ID/episodes/EPISODE_ID/
   -F "transcript_file=@episode.srt" \
   -F "transcript_format=srt"
 ```
+
+#### SRT file format
+
+Save SRT transcripts as UTF-8 plain text. Each cue must contain a sequence number, a timestamp line, one or two lines of transcript text, and a blank line before the next cue.
+
+```srt
+1
+00:00:00,000 --> 00:00:03,250
+Host: Welcome to the show.
+
+2
+00:00:03,500 --> 00:00:07,900
+Today we're talking about the SRT
+transcript format.
+
+3
+00:00:08,100 --> 00:00:11,400
+Guest: Thanks for having me.
+```
+
+Follow these rules when creating an SRT file:
+
+* Number cues sequentially, starting with `1`.
+* Write timestamps as `HH:MM:SS,mmm --> HH:MM:SS,mmm`. Use two digits for hours, minutes, and seconds; three digits for milliseconds; a comma before milliseconds; and spaces around `-->`.
+* Keep cues in playback order, with each end time later than or equal to its start time.
+* Put one or two lines of transcript text after each timestamp. Additional lines in the same cue are not imported.
+* Separate cues with one blank line.
+* To identify a speaker, begin the first text line with `Speaker name: `. Add a new label whenever the speaker changes. Unlabeled cues inherit the previous speaker. A colon on the first text line is treated as a speaker delimiter.
+* Do not add a file header, Markdown code fences, JSON, or explanatory text.
+
+An invalid cue causes the upload to return `422 Unprocessable Entity`, so validate the entire file before uploading it.
 
 ### Delete
 
