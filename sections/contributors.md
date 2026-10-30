@@ -33,11 +33,14 @@ Roles may be sent as `Guest` or `guest`. The response uses the canonical label (
   "name": "Guest Star",
   "role": "Guest",
   "bio": "<p>Hello</p>",
-  "url": "https://example.com"
+  "url": "https://example.com",
+  "headshot_url": null
 }
 ```
 
 List returns an array of the same objects.
+
+`headshot_url` is the image URL, or `null` when the contributor has no headshot. It is included in contributor list, show, create, and update responses.
 
 Show, update, delete
 --------------------
@@ -47,6 +50,20 @@ Show, update, delete
 * `DELETE /api/:podcast_id/contributors/:id`
 
 Deleting a contributor removes them from **every** episode and deletes the contributor. Prefer episode unassign (below) when you only want them off one episode. Delete returns `204 No Content`.
+
+### Upload a headshot
+
+To add or replace a headshot, send `headshot_file` as a file in a multipart request when creating or updating a contributor. PNG, JPEG, and WebP images up to 15 MB are accepted. Omitting the file on an update leaves the existing headshot unchanged.
+
+```bash
+curl -sS -X PATCH "https://www.buzzsprout.com/api/PODCAST_ID/contributors/CONTRIBUTOR_ID" \
+  -H "Authorization: Token token=YOUR_API_TOKEN" \
+  -H "User-Agent: ExamplePodcastClient/1.0" \
+  -H "Accept: application/json" \
+  -F "headshot_file=@headshot.jpg"
+```
+
+For a new contributor, use `POST /api/:podcast_id/contributors` and include fields such as `name` and `role` in the same multipart request. Invalid images return `422 Unprocessable Entity` with `code: "invalid"` and `param: "headshot"`; an invalid replacement does not change the existing headshot.
 
 Assign to an episode
 --------------------
